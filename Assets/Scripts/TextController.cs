@@ -6,15 +6,22 @@ using UnityEngine.UI;
 public class TextController : MonoBehaviour {
 
 	public Text text;
-	public float letterPause = 0.2f;
-	public AudioClip typeSound1;
+	public float letterPause = .05f;
 
 	private enum States { cell, mirror, sheets_0, lock_0, cell_mirror, sheets_1, lock_1, freedom }
 	private States myState;
 
+	string[] goatText;
+	int currentlyDisplayingText = 0;
+
 	// Use this for initialization
 	void Start () {
 		myState = States.cell;
+		goatText = new string[] {"You wake up in a cell. Dazed and confused you look around your surroundings for something useful. " +
+			"Upon further expection, you notice the cell is very bare. \n\n" +
+			"Only three items are available for use: \n\n" +
+			"(S)heets | (M)irror | (L)ock"};
+		StartAnimationText ();
 	}
 	
 	// Update is called once per frame
@@ -52,9 +59,10 @@ public class TextController : MonoBehaviour {
 	}
 
 	void state_sheet0 () {
-		text.text = "I don't think this is the time to hit the hay just yet. \n\n" +
+		goatText = new string[] {"I don't think this is the time to hit the hay just yet. \n\n" +
 					"Only three items are available for use: \n\n" +
-					"(S)heets | (M)irror | (L)ock";
+			"(S)heets | (M)irror | (L)ock"};
+		StartAnimationText ();
 	}
 
 	void state_mirror () {
@@ -71,18 +79,35 @@ public class TextController : MonoBehaviour {
 					"(S)heets | (M)irror | (L)ock";
 	}
 
-	IEnumerator TypeText () {
-		text.text = "You wake up in a cell. Dazed and confused you look around your surroundings for something useful. " +
-					"Upon further expection, you notice the cell is very bare. \n\n" +
-					"Only three items are available for use: \n\n" +
-					"(S)heets | (M)irror | (L)ock";
-		
-		foreach (char letter in message.ToCharArray()) {
-			textComp.text += letter;
-			if (typeSound1 && typeSound2)
-				SoundManager.instance.RandomizeSfx(typeSound1, typeSound2);
-			yield return 0;
-			yield return new WaitForSeconds (letterPause);
-		}
+	void StartAnimationText () {
+		StartCoroutine(AnimateText());
+		PlayAudio ();
 	}
+
+	public void SkipToNextText(){
+		StopAllCoroutines();
+		currentlyDisplayingText++;
+		//If we've reached the end of the array, do anything you want. I just restart the example text
+		if (currentlyDisplayingText>goatText.Length) {
+			currentlyDisplayingText=0;
+		}
+		StartCoroutine(AnimateText());
+	}
+
+	IEnumerator AnimateText(){
+		for (int i = 0; i < (goatText[currentlyDisplayingText].Length+1); i++)
+		{
+			text.text = goatText[currentlyDisplayingText].Substring(0, i);
+			yield return new WaitForSeconds(letterPause);
+		}
+		AudioSource audio = GetComponent<AudioSource>();
+		audio.Stop ();
+	}
+
+	void PlayAudio() {
+		AudioSource audio = GetComponent<AudioSource>();
+		audio.Play();
+	}
+
+
 }
