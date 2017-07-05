@@ -21,17 +21,11 @@ public class TextController : MonoBehaviour {
 
 		if (myState == States.cell) {
 			state_cell();
-		}
-
-		if (myState == States.sheets_0) {
+		} else if (myState == States.sheets_0) {
 			state_sheet0();
-		}
-
-		if (myState == States.mirror) {
+		} else if (myState == States.mirror) {
 			state_mirror();
-		}
-
-		if (myState == States.lock_0) {
+		} else if (myState == States.lock_0) {
 			state_lock0();
 		}
 
@@ -66,11 +60,15 @@ public class TextController : MonoBehaviour {
 
 	void state_mirror () {
 		text.text = "You apply pressure to the mirror.... Seems this prison was made in a rush. \n\n" +
-					"After a bit of jiggling, the mirror comes loose!";
+					"After a bit of jiggling, the mirror comes loose! \n\n" +
+					"Only two items are available for use: \n\n" +
+					"(S)heets | (L)ock";
 	}
 
 	void state_lock0 () {
 		text.text = "Just your standard issued prison lock. \n" +
-					"Would of been nice to have the key.";
+					"Would of been nice to have the key. \n\n" +
+					"Only three items are available for use: \n\n" +
+					"(S)heets | (M)irror | (L)ock";
 	}
 }
