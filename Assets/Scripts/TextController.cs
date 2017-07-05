@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class TextController : MonoBehaviour {
 
 	public Text text;
+	public float letterPause = 0.2f;
+	public AudioClip typeSound1;
 
 	private enum States { cell, mirror, sheets_0, lock_0, cell_mirror, sheets_1, lock_1, freedom }
 	private States myState;
@@ -46,10 +48,7 @@ public class TextController : MonoBehaviour {
 	}
 
 	void state_cell () {
-		text.text = "You wake up in a cell. Dazed and confused you look around your surroundings for something useful. " +
-					"Upon further expection, you notice the cell is very bare. \n\n" +
-					"Only three items are available for use: \n\n" +
-					"(S)heets | (M)irror | (L)ock";
+		
 	}
 
 	void state_sheet0 () {
@@ -70,5 +69,20 @@ public class TextController : MonoBehaviour {
 					"Would of been nice to have the key. \n\n" +
 					"Only three items are available for use: \n\n" +
 					"(S)heets | (M)irror | (L)ock";
+	}
+
+	IEnumerator TypeText () {
+		text.text = "You wake up in a cell. Dazed and confused you look around your surroundings for something useful. " +
+					"Upon further expection, you notice the cell is very bare. \n\n" +
+					"Only three items are available for use: \n\n" +
+					"(S)heets | (M)irror | (L)ock";
+		
+		foreach (char letter in message.ToCharArray()) {
+			textComp.text += letter;
+			if (typeSound1 && typeSound2)
+				SoundManager.instance.RandomizeSfx(typeSound1, typeSound2);
+			yield return 0;
+			yield return new WaitForSeconds (letterPause);
+		}
 	}
 }
